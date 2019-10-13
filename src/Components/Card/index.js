@@ -15,13 +15,37 @@ import {
   Name
 } from "./styles";
 
+const trans = (x, y, r, s) => {
+  console.log(x, y, r, s);
+  return `translate3d(${x}px,${y}px,0) perspective(1500px) rotateX(30deg) rotateY(${r /
+    10}deg) rotateZ(${r}deg) scale(${s})`;
+};
 
+const NUM_PROJECTS = 5;
+const r = Math.floor(Math.random() * NUM_PROJECTS);
+const to = {
+  x: 0,
+  y: r * -4,
+  scale: 1,
+  rot: -10 + Math.random() * 20,
+  delay: r * 100
+};
+const from = { x: 0, rot: 0, scale: 1.5, y: -1000 };
 const Card = () => {
-  const [cardCanMove, setCardCanMove] = useState(false);
-  const [{ x, y }, setPosition] = useSpring(() => ({
-    x: 0,
-    y: 0,
-    config: { mass: 10, tension: 350, friction: 40 }
+  const [props, setSpring] = useSpring(props => ({
+    from: {
+      x: 0,
+      rot: 0,
+      scale: 1.5,
+      y: -1000
+    },
+    to: {
+      x: 0,
+      y: r * -4,
+      scale: 1,
+      rot: -10 + Math.random() * 20,
+      delay: r * 100
+    }
   }));
 
   const bind = useGesture({
@@ -31,22 +55,26 @@ const Card = () => {
       delta,
       velocity,
       direction,
-      temp = [x.getValue(), y.getValue()]
+      temp = [props.x.getValue(), props.y.getValue()]
     }) => {
-      setCardCanMove(true);
-    
       const limitedVel =
         scale(direction, velocity) > 2 ? 2 : scale(direction, velocity);
-      setPosition({
-        x: temp[0] + delta[0],
-        y: temp[1] + delta[1],
-        immediate: down,
-        config: { velocity: limitedVel, decay: true }
-      });
+
+      if (down)
+        setSpring({
+          x: temp[0] + delta[0],
+          y: temp[1] + delta[1],
+          rot: 0,
+          scale: 1.1,
+          immediate: down,
+          config: { velocity: limitedVel, decay: true }
+        });
       return temp;
     },
     onDragEnd: () => {
-      setCardCanMove(false);
+      setSpring({
+        scale: 1
+      });
     }
   });
 
@@ -54,7 +82,10 @@ const Card = () => {
     <CardContainer
       {...bind()}
       style={{
-        transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`)
+        transform: interpolate(
+          [props.x, props.y, props.rot, props.scale],
+          trans
+        )
       }}
     >
       <NameSection>
@@ -71,8 +102,8 @@ const Card = () => {
       <Spacing />
       <ActionSection>
         <Action>
-          <p style={{ textAlign: "left" }}>Lighting bolt</p>
-          <p>Flip a coin if heads your opponent's Pokemon is now paralyzed`</p>
+          <p style={{ textAlign: "left" }}>Farb bomb</p>
+          <p>Flip a coin if heads your opponent's Pokemon is now dead</p>
           <p>-10</p>
         </Action>
         <Action>
