@@ -16,7 +16,6 @@ import {
 } from "./styles";
 
 const trans = (x, y, r, s) => {
-  console.log(x, y, r, s);
   return `translate3d(${x}px,${y}px,0) perspective(1500px) rotateX(30deg) rotateY(${r /
     10}deg) rotateZ(${r}deg) scale(${s})`;
 };
