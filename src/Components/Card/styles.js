@@ -18,6 +18,7 @@ const CardContainer = styled(animated.div)`
   transform: perspective(1500px) rotateX(30deg) rotateY(0deg) rotateZ(0deg)
     scale(1);
   position: absolute;
+  user-select: none; /*removes text highlighting*/
 `;
 
 const NameSection = styled.div`

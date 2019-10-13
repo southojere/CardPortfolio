@@ -30,63 +30,10 @@ const to = {
   delay: r * 100
 };
 const from = { x: 0, rot: 0, scale: 1.5, y: -1000 };
-const Card = () => {
-  const [props, setSpring] = useSpring(props => ({
-    from: {
-      x: 0,
-      rot: 0,
-      scale: 1.5,
-      y: -1000
-    },
-    to: {
-      x: 0,
-      y: r * -4,
-      scale: 1,
-      rot: -10 + Math.random() * 20,
-      delay: r * 100
-    }
-  }));
-
-  const bind = useGesture({
-    // this will override the onMouseDown
-    onDrag: ({
-      down,
-      delta,
-      velocity,
-      direction,
-      temp = [props.x.getValue(), props.y.getValue()]
-    }) => {
-      const limitedVel =
-        scale(direction, velocity) > 2 ? 2 : scale(direction, velocity);
-
-      if (down)
-        setSpring({
-          x: temp[0] + delta[0],
-          y: temp[1] + delta[1],
-          rot: 0,
-          scale: 1.1,
-          immediate: down,
-          config: { velocity: limitedVel, decay: true }
-        });
-      return temp;
-    },
-    onDragEnd: () => {
-      setSpring({
-        scale: 1
-      });
-    }
-  });
-
+const Card = (props) => {
+  
   return (
-    <CardContainer
-      {...bind()}
-      style={{
-        transform: interpolate(
-          [props.x, props.y, props.rot, props.scale],
-          trans
-        )
-      }}
-    >
+    <CardContainer {...props.bind()} style={props.style}>
       <NameSection>
         <Name>
           <p>Developer</p>
