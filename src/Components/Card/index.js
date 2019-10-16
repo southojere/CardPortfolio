@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSpring, animated, interpolate } from "react-spring";
 import { add, scale } from "vec-la";
 import { useGesture } from "react-use-gesture";
+import PokemonResolver from "../../helpers/PokemonResolver";
 import {
   Footer,
   Spacing,
@@ -20,24 +21,22 @@ const trans = (x, y, r, s) => {
     10}deg) rotateZ(${r}deg) scale(${s})`;
 };
 
-const NUM_PROJECTS = 5;
-const r = Math.floor(Math.random() * NUM_PROJECTS);
-const to = {
-  x: 0,
-  y: r * -4,
-  scale: 1,
-  rot: -10 + Math.random() * 20,
-  delay: r * 100
-};
-const from = { x: 0, rot: 0, scale: 1.5, y: -1000 };
-const Card = (props) => {
-  
+const NUM_POKEMON = 5;
+const Card = props => {
+  const [pokemon, setPokemon] = useState(null);
+
+  useEffect(() => {
+    new PokemonResolver()
+      .getPokemon()
+      .then(pokemon => setPokemon(pokemon));
+  }, []);
+
+  if (!pokemon) return <p>Loading...</p>;
   return (
     <CardContainer {...props.bind()} style={props.style}>
       <NameSection>
         <Name>
-          <p>Developer</p>
-          <p>Jeremy</p>
+          <p>{pokemon.name}</p>
         </Name>
         <Hp>10 HP</Hp>
       </NameSection>
@@ -47,16 +46,16 @@ const Card = (props) => {
       </ImgDescSection>
       <Spacing />
       <ActionSection>
-        <Action>
-          <p style={{ textAlign: "left" }}>Farb bomb</p>
-          <p>Flip a coin if heads your opponent's Pokemon is now dead</p>
-          <p>-10</p>
-        </Action>
-        <Action>
-          <p>Sleep</p>
-          <p>Sleep and restore 100HP</p>
-          <p>+100</p>
-        </Action>
+        {pokemon.abilities.map(ability => {
+          return (
+            <Action>
+              <p style={{ textAlign: "left", paddingRight:"10px" }}>{ability.name}</p>
+              <p style={{ textAlign: "left" }}>{ability.desc}</p>
+              <p>-10</p>
+            </Action>
+          );
+        })}
+       
       </ActionSection>
       <Footer>
         <div className="left">Follow me on twiiter here :)</div>
