@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useSpring, animated, interpolate } from "react-spring";
-import { add, scale } from "vec-la";
-import { useGesture } from "react-use-gesture";
 import PokemonResolver from "../../helpers/PokemonResolver";
 import {
   Footer,
@@ -21,41 +18,47 @@ const trans = (x, y, r, s) => {
     10}deg) rotateZ(${r}deg) scale(${s})`;
 };
 
-const NUM_POKEMON = 5;
 const Card = props => {
   const [pokemon, setPokemon] = useState(null);
 
   useEffect(() => {
-    new PokemonResolver()
-      .getPokemon()
-      .then(pokemon => setPokemon(pokemon));
+    new PokemonResolver().getPokemon().then(pokemon => setPokemon(pokemon));
   }, []);
 
   if (!pokemon) return <p>Loading...</p>;
   return (
-    <CardContainer {...props.bind()} style={props.style}>
+    <CardContainer
+      key={pokemon.name}
+      {...props.bind()}
+      style={props.style}
+      cardbackgroundcolor={pokemon.styles.backgroundColor}
+      cardbordercolor={pokemon.styles.borderColor}
+    >
       <NameSection>
         <Name>
           <p>{pokemon.name}</p>
         </Name>
         <Hp>10 HP</Hp>
       </NameSection>
-      <Img />
+      <Img src={pokemon.images[0]} />
       <ImgDescSection>
-        <p>NO .25 Mouse Pokemon HT 1:04'</p>
+        <p>{`NO .${pokemon.id} Mouse Pokemon HT 1:04' WT ${pokemon.weight}lbs`}</p>
       </ImgDescSection>
       <Spacing />
       <ActionSection>
         {pokemon.abilities.map(ability => {
           return (
-            <Action>
-              <p style={{ textAlign: "left", paddingRight:"10px" }}>{ability.name}</p>
-              <p style={{ textAlign: "left" }}>{ability.desc}</p>
+            <Action key={ability.name}>
+              <p style={{ textAlign: "left", paddingRight: "10px" }}>
+                {ability.name}
+              </p>
+              <p style={{ textAlign: "left" }} title={ability.desc}>
+                {ability.shortDesc}
+              </p>
               <p>-10</p>
             </Action>
           );
         })}
-       
       </ActionSection>
       <Footer>
         <div className="left">Follow me on twiiter here :)</div>

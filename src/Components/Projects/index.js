@@ -4,7 +4,7 @@ import { useSprings, animated, interpolate } from "react-spring";
 import { useGesture } from "react-use-gesture";
 import Card from "../Card";
 
-const cards = ["", "", "", ""];
+const cards = ["", "", ""];
 
 // HELPERS
 const to = i => ({

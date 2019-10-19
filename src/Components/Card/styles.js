@@ -1,16 +1,22 @@
 import styled from "styled-components";
 import { animated } from "react-spring";
 
+const borderColors = ["#ffe263"];
 const CardContainer = styled(animated.div)`
   display: flex;
   position: relative;
   flex-direction: column;
-  background: white;
+  background: ${props =>
+    props.cardbackgroundcolor ? props.cardbackgroundcolor : "white"};
   width: 45vh;
   max-width: 300px;
   height: 85vh;
   max-height: 570px;
   padding: 2rem;
+  border: ${props =>
+    props.cardbordercolor
+      ? `10px solid ${props.cardbordercolor}`
+      : " 10px solid #ffe263"};
   will-change: transform;
   border-radius: 10px;
   box-shadow: 0 12.5px 100px -10px rgba(50, 50, 73, 0.4),
@@ -29,16 +35,17 @@ const NameSection = styled.div`
   border-radius: inherit;
 `;
 
-const Name = styled.div`
+const Name = styled.h3`
   display: flex;
   flex-direction: column;
+  margin:0px;
 `;
 
-const Img = styled.div`
+const Img = styled.img`
   width: 100%;
   height: 50%;
   /* border-radius:inherit; */
-  background: wheat;
+  background: white;
   border: 2px #b2aea0 solid;
 `;
 
